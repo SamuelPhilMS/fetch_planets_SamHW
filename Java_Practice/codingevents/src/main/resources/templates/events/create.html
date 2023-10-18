@@ -28,6 +28,20 @@
     </div>
     <br>
     <div class="form-group">
+        <label> Event Location
+        <input th:field="${event.eventLocation}" class="form-control"/>
+        </label>
+        <p class="error" th:errors="${event.eventLocation}"></p>
+    </div>
+    <br>
+    <div class="form-group">
+        <label> Number of Attendees
+            <input th:field="${event.numberOfAttendees}" class="form-control"/>
+        </label>
+        <p class="error" th:errors="${event.numberOfAttendees}"></p>
+    </div>
+    <br>
+    <div class="form-group">
         <label> Type:
             <select th:field="${event.type}">
                 <option th:each="type : ${types}"

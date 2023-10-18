@@ -1,8 +1,6 @@
 package org.launchcode.codingevents.Models;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.util.Objects;
 
@@ -20,20 +18,53 @@ public class Event {
     @NotBlank(message="Email is required.")
     @Email(message="Please format this like an actual email.")
     private String contactEmail;
+
+    @NotBlank(message="Please specify a location for your event which is not the ether.")
+    private String eventLocation;
+    private boolean registrationRequirement = true;
+    @Min(1)
+    private int numberOfAttendees;
     private EventType type;
 
 
-    public Event(String name, String description, String contactEmail, EventType type) {
+    public Event(String name, String description, String contactEmail, EventType type, String eventLocation, boolean registrationRequirement, int numberOfAttendees) {
         this();
         this.name = name;
         this.description = description;
         this.contactEmail = contactEmail;
         this.type = type;
+        this.eventLocation = eventLocation;
+        this.registrationRequirement = registrationRequirement;
+        this.numberOfAttendees = numberOfAttendees;
     }
 
     public Event(){
         this.id=nextId;
         nextId++;
+    }
+
+    public String getEventLocation() {
+        return eventLocation;
+    }
+
+    public void setEventLocation(String eventLocation) {
+        this.eventLocation = eventLocation;
+    }
+
+    public boolean isRegistrationRequirement() {
+        return registrationRequirement;
+    }
+
+    public void setRegistrationRequirement(boolean registrationRequirement) {
+        this.registrationRequirement = registrationRequirement;
+    }
+
+    public int getNumberOfAttendees() {
+        return numberOfAttendees;
+    }
+
+    public void setNumberOfAttendees(int numberOfAttendees) {
+        this.numberOfAttendees = numberOfAttendees;
     }
 
     public EventType getType() {
