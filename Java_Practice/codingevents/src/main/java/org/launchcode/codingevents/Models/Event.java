@@ -1,12 +1,15 @@
 package org.launchcode.codingevents.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -14,31 +17,32 @@ import java.util.Objects;
 @Entity
 public class Event extends AbstractEntity {
 
-    private static int nextId = 1;
+   private static int nextId = 1;
+    @OneToOne(cascade = CascadeType.ALL)
+    @Valid
+    @NotNull
+   private EventDetails eventDetails;
 
     @NotBlank(message="Name is required")
     @Size(min = 3, max = 50, message="Name must be between 3 and 50 characters.")
     private String name;
-    @Size(max=500, message="Description too long. Please use 500 characters or less.")
-    private String description;
-
-    @NotBlank(message="Email is required.")
-    @Email(message="Please format this like an actual email.")
-    private String contactEmail;
 
     @NotBlank(message="Please specify a location for your event which is not the ether.")
     private String eventLocation;
     private boolean registrationRequirement = true;
     @Min(1)
     private int numberOfAttendees;
-    private EventType type;
+    @ManyToOne
+    @NotNull(message="Event must be in one category.")
+    private EventCategory eventCategory;
+
+    @ManyToMany
+    private final List<Tag> tags = new ArrayList<>();
 
 
-    public Event(String name, String description, String contactEmail, EventType type, String eventLocation, boolean registrationRequirement, int numberOfAttendees) {
+    public Event(String name, String description, String contactEmail, EventCategory eventCategory, String eventLocation, boolean registrationRequirement, int numberOfAttendees) {
         this.name = name;
-        this.description = description;
-        this.contactEmail = contactEmail;
-        this.type = type;
+        this.eventCategory = eventCategory;
         this.eventLocation = eventLocation;
         this.registrationRequirement = registrationRequirement;
         this.numberOfAttendees = numberOfAttendees;
@@ -70,20 +74,12 @@ public class Event extends AbstractEntity {
         this.numberOfAttendees = numberOfAttendees;
     }
 
-    public EventType getType() {
-        return type;
+    public EventCategory getEventCategory() {
+        return eventCategory;
     }
 
-    public void setType(EventType type) {
-        this.type = type;
-    }
-
-    public String getContactEmail() {
-        return contactEmail;
-    }
-
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
+    public void setEventCategory(EventCategory eventCategory) {
+        this.eventCategory = eventCategory;
     }
 
     public String getName() {
@@ -94,12 +90,20 @@ public class Event extends AbstractEntity {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public EventDetails getEventDetails() {
+        return eventDetails;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setEventDetails(EventDetails eventDetails) {
+        this.eventDetails = eventDetails;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void addTag(Tag tag){
+        this.tags.add(tag);
     }
 
     @Override
